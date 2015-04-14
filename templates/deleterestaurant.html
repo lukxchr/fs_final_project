@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}Index{% endblock %}
+{% block head %}
+	{{ super() }}
+	<style>
+	</style>
+{% endblock %}
+
+{% block navbar %}
+	{{ super() }}
+{% endblock %}
+
+
+
+{% block page_content %}
+<div class="page-header">
+    <h1>Delete existing restaurant with id {{ restaurant_id }}</h1>
+</div>
+{% endblock %}
