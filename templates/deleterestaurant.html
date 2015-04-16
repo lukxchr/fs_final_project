@@ -16,6 +16,15 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>Delete existing restaurant with id {{ restaurant_id }}</h1>
+    <h1>Delete existing restaurant '{{ restaurant.name }}'?</h1>
 </div>
+<p>Assosciated menu items will be deleted as well.</p>
+<form action ="{{ url_for('deleteRestaurant', restaurant_id=restaurant.id ) }}" method="POST">
+<button class='btn btn-danger btn-lg' type="submit" name="delete_restaurant" value="delete"><span class="fa fa-times"></span> delete</button>
+<button class='btn btn-default btn-lg' type="submit" name="delete_restaurant" value="cancel"><span class="fa fa-times"></span> cancel</button>
+</form>
+
+
+
+
 {% endblock %}

@@ -16,6 +16,10 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>delete item {{ item_id }} in restaurant {{ restaurant_id }}</h1>
+    <h1>Delete existing menu item '{{ item.name }}'?</h1>
 </div>
+<form action ="{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, item_id=item.id ) }}" method="POST">
+<button class='btn btn-danger btn-lg' type="submit" name="delete_item" value="delete"><span class="fa fa-times"></span> delete</button>
+<button class='btn btn-default btn-lg' type="submit" name="delete_item" value="cancel"><span class="fa fa-times"></span> cancel</button>
+</form>
 {% endblock %}

@@ -16,6 +16,7 @@
 
 {% block page_content %}
 <div class="page-header">
-    <h1>edit item {{ item_id }} in restaurant {{ restaurant_id }}</h1>
+    <h1>Editing {{ item.name }} </h1>
 </div>
+{{ wtf.quick_form(form) }}
 {% endblock %}
