@@ -1,5 +1,5 @@
 from flask import Flask, request, render_template, \
- redirect, url_for, flash, session
+ redirect, url_for, flash, session, jsonify
 from flask.ext.script import Manager
 from flask.ext.bootstrap import Bootstrap
 from flask.ext.sqlalchemy import SQLAlchemy
@@ -30,7 +30,7 @@ item =  {'name':'Cheese Pizza','description':'made with fresh cheese','price':'$
 
 
 @app.route('/')
-@app.route('/restaurant/')
+@app.route('/restaurants/')
 def showRestaurants():
 	restaurants = Restaurant.query.all()
 	return render_template('restaurants.html', restaurants=restaurants)
@@ -144,6 +144,7 @@ def deleteMenuItem(restaurant_id, item_id):
 	return render_template('deletemenuitem.html', restaurant=restaurant, item=item)
 	#return "delete menu item  restaurant id=%d menu_id =%d" % (restaurant_id, menu_id)
 
+
 @app.errorhandler(404)
 def pageNotFound(e):
 	return render_template('404.html'), 404
@@ -162,6 +163,29 @@ def info():
 	return output, 400, {'chuj' : 'kasne-mleko'}
 
 
+#API routes
+
+# @property
+# def serialize(self):
+#     return {'id' : self.id, 
+#     		'name' : self.name}
+
+#all restaurants
+@app.route('/restaurants/JSON/')
+def restaurantsJSON():
+	restaurants = Restaurant.query.all()
+	return jsonify(Restaurants=[r.serialize for r in restaurants])
+
+@app.route('/restaurant/<int:restaurant_id>/menu/JSON')
+def showMenuJSON(restaurant_id):
+	items = MenuItem.query.filter_by(restaurant_id=restaurant_id).all()
+	return jsonify(MenuItems=[i.serialize for i in items])
+
+@app.route('/restaurant/<int:restaurant_id>/menu/<int:item_id>/JSON')
+def MenuItemJSON(restaurant_id, item_id):
+	item = MenuItem.query.filter_by(restaurant_id=restaurant_id, id=item_id).first()
+	return jsonify(item.serialize)
+
 #db model definitions
 class Restaurant(db.Model):
 	__tablename__ = 'restaurants'
@@ -171,6 +195,14 @@ class Restaurant(db.Model):
 
 	def __repr__(self):
 		return "<Restaurant %s>" % self.name
+
+	@property
+	def serialize(self):
+	    return {
+	    	'id' : self.id, 
+	    	'name' : self.name
+	    }
+	
 
 class MenuItem(db.Model):
 	__tablename__ = 'menu_items'
@@ -184,6 +216,16 @@ class MenuItem(db.Model):
 	def __repr__(self):
 		return "<MenuItem %s -- %s -- %d -- %s -- (%d)>" % (
 			self.name, self.description, self.price, self.course, self.restaurant_id)
+
+	@property
+	def serialize(self):
+		return {
+           'name'         : self.name,
+           'description'         : self.description,
+           'id'         : self.id,
+           'price'         : '{0}'.format(round(self.price, 2)),
+           'course'         : self.course,
+       }
 
 if __name__ == '__main__':
 	#app.run(debug=True)
