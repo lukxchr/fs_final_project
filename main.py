@@ -89,7 +89,6 @@ def showMenu(restaurant_id):
 	restaurant = Restaurant.query.filter_by(id=restaurant_id).first()
 	items = MenuItem.query.filter_by(restaurant_id=restaurant_id).all()
 	return render_template('menu.html', items=items, restaurant=restaurant)
-	#return "show menu for restaurant with id=%d" % restaurant_id
 
 @app.route('/restaurant/<int:restaurant_id>/menu/new/', methods=['GET', 'POST'])
 def newMenuItem(restaurant_id):
@@ -107,7 +106,6 @@ def newMenuItem(restaurant_id):
 		db.session.commit()
 		return redirect(url_for('showMenu', restaurant_id=restaurant_id))
 	return render_template('newmenuitem.html', restaurant=restaurant, form=form)
-	#return "Add new menu item to restaurant id=%d" % restaurant_id
 
 @app.route('/restaurant/<int:restaurant_id>/menu/<int:item_id>/edit', methods=['GET', 'POST'])
 def editMenuItem(restaurant_id, item_id):
@@ -122,7 +120,7 @@ def editMenuItem(restaurant_id, item_id):
 		item.course = form.course.data
 		db.session.add(item)
 		db.session.commit()
-		flash('Saved')
+		flash('Menu Item Successfully Edited')
 		return redirect(url_for('showMenu', restaurant_id=restaurant_id))
 	return render_template('editmenuitem.html', form=form, item=item)
 
@@ -136,11 +134,9 @@ def deleteMenuItem(restaurant_id, item_id):
 		if action == 'delete':
 			db.session.delete(item)
 			db.session.commit()
-			flash('deleted item %s' % item.name)
+			flash('Menu Item Successfully Deleted')
 		return redirect(url_for('showMenu', restaurant_id=restaurant_id))
 	return render_template('deletemenuitem.html', restaurant=restaurant, item=item)
-	#return "delete menu item  restaurant id=%d menu_id =%d" % (restaurant_id, menu_id)
-
 
 @app.errorhandler(404)
 def pageNotFound(e):

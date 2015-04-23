@@ -10,7 +10,7 @@ class RestaurantForm(Form):
 class MenuItemForm(Form):
 	name = StringField('Name', validators=[Required()])
 	description = StringField('Description', validators=[Required()])
-	price = DecimalField('Price', validators=[Required()])
+	price = DecimalField('Price in $', validators=[Required()])
 	course = SelectField('Course', choices=[('entree', 'Entree'), 
 		('dessert', 'Dessert'), ('beverage', 'Beverage'), 
 		('appetizer', 'Appetizer'), ('main_course', 'Main course')])

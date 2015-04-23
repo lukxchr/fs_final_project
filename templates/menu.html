@@ -12,18 +12,20 @@
 	{{ super() }}
 {% endblock %}
 
-
-
 {% block page_content %}
 <div class="page-header">
     <h1>Menu for '{{ restaurant.name }}'</h1>
 </div>
 <a href="{{ url_for('newMenuItem', restaurant_id=restaurant.id) }}">Add New Menu Item</a>
-{% for item in items %}
-	<div>{{ item.name }} | {{ item.description }} | ${{ '%.2f' % item.price }}
-		<a href="{{ url_for('editMenuItem', restaurant_id=restaurant.id, item_id=item.id) }}">Edit</a>
-		<a href="{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, item_id=item.id) }}">Delete</a>
-	</div>
-{% endfor %}
+{% if items %}
+	{% for item in items %}
+		<div>{{ item.name }} | {{ item.description }} | ${{ '%.2f' % item.price }} |
+			<a href="{{ url_for('editMenuItem', restaurant_id=restaurant.id, item_id=item.id) }}">Edit |</a>
+			<a href="{{ url_for('deleteMenuItem', restaurant_id=restaurant.id, item_id=item.id) }}">Delete</a>
+		</div>
+	{% endfor %}
+{% else %}
+	</br>This menu is empty. You can add new items using the link above.
+{% endif %}
 
 {% endblock %}
