@@ -45,11 +45,8 @@ def newRestaurant():
 		db.session.add(new_restaurant)
 		db.session.commit()
 		flash('New Restaurant Created')
-		#form.name.data = ''
-		#session['name'] = name
 		return redirect(url_for('showRestaurants'))
 	return render_template('newrestaurant.html', form=form)
-	#return 'create new restaurant'
 	
 @app.route('/restaurant/<int:restaurant_id>/edit/', methods=['GET', 'POST'])
 def editRestaurant(restaurant_id):
@@ -70,18 +67,19 @@ def deleteRestaurant(restaurant_id):
 	if request.method == 'POST':
 		#if user confirmed delete restaurant, otherwise skip to redirect
 		action = request.form.get('delete_restaurant')
-		#action == 'delete' iff user cliked delete button
+		#action == 'delete' iff user clicked delete button
 		if action == 'delete':
-			print "deleting..."
 			#delete MenuItems associated with Restaurant
-			items = MenuItem.query.filter_by(restaurant_id=restaurant.id).all()
-			#print items
-			for item in items:
+			items = MenuItem.query.filter_by(restaurant_id=restaurant.id)
+			n_items = items.count()
+			for item in items.all():
 				db.session.delete(item)
-				flash('deleted item %s' % item.name)
+			flash_message = 'Successfully Deleted {0} Menu Items'.format(n_items) \
+				if (n_items > 0) else 'No Menu Items were deleted'
+			flash(flash_message)
 			db.session.delete(restaurant)
 			db.session.commit()
-			flash('deleted restaurant %s' % restaurant.name)
+			flash('Restaurant Successfully Deleted')
 		return redirect(url_for('showRestaurants'))
 	return render_template('deleterestaurant.html', restaurant=restaurant)
 
@@ -152,6 +150,8 @@ def pageNotFound(e):
 def internalServerError(e):
 	return "internalServerError 500", 500
 
+
+#temporary view functions for debugging purposes
 @app.route('/info/')
 def info():
 	#return str(app.config.keys)
@@ -159,15 +159,7 @@ def info():
 	output += str([h for h in request.headers])
 	output += "<br><br>"
 	output += request.headers.get('User-Agent')
-	return output, 400, {'chuj' : 'kasne-mleko'}
-
-
-#API routes
-
-# @property
-# def serialize(self):
-#     return {'id' : self.id, 
-#     		'name' : self.name}
+	return output, 400
 
 #all restaurants
 @app.route('/restaurants/JSON/')

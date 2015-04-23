@@ -2,14 +2,6 @@ from flask.ext.wtf import Form
 from wtforms import StringField, SubmitField, DecimalField, SelectField
 from wtforms.validators import Required
 
-# class NewRestaurantForm(Form):
-# 	name = StringField('What is the name of the new restaurant?', validators=[Required()])
-# 	submit = SubmitField('Submit')
-
-# class EditRestaurantForm(Form):
-# 	name = StringField('New name:', validators=[Required()])
-# 	submit = SubmitField('Submit')
-
 
 class RestaurantForm(Form):
 	name = StringField('Name:', validators=[Required()])
