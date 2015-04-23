@@ -37,32 +37,31 @@ def showRestaurants():
 
 @app.route('/restaurant/new/', methods=['GET', 'POST'])
 def newRestaurant():
-	form = NewRestaurantForm()
+	form = RestaurantForm()
 	if form.validate_on_submit():
 		name = form.name.data
 		#add new restaurant with specified name to the db
 		new_restaurant = Restaurant(name=name)
 		db.session.add(new_restaurant)
 		db.session.commit()
-		flash('added restaurant %s' % name)
+		flash('New Restaurant Created')
 		#form.name.data = ''
 		#session['name'] = name
-		return redirect(url_for('newRestaurant'))
+		return redirect(url_for('showRestaurants'))
 	return render_template('newrestaurant.html', form=form)
 	#return 'create new restaurant'
 	
 @app.route('/restaurant/<int:restaurant_id>/edit/', methods=['GET', 'POST'])
 def editRestaurant(restaurant_id):
-	form = EditRestaurantForm()
 	restaurant = Restaurant.query.filter_by(id=restaurant_id).first()
+	form = RestaurantForm(name = restaurant.name)
 	if form.validate_on_submit():
-		print 'in'
 		name = form.name.data
 		restaurant.name = name
 		db.session.add(restaurant)
 		db.session.commit()
-		flash('changed name to %s' % name)
-		return redirect(url_for('editRestaurant', restaurant_id=restaurant_id))
+		flash('Restaurant Successfully Edited')
+		return redirect(url_for('showRestaurants'))
 	return render_template('editrestaurant.html', restaurant=restaurant, form=form)
 
 @app.route('/restaurant/<int:restaurant_id>/delete/', methods=['GET', 'POST'])
